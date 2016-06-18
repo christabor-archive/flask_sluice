@@ -1,4 +1,7 @@
 # sluice
+
+![sluice logo](sluice_logo.png)
+
 A dashboard and service for displaying metrics and executing commands for the Python prospector analysis module.
 
 ## Getting started.
