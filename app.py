@@ -8,14 +8,13 @@ import os
 
 from celery import Celery
 from flask import (
-    abort,
     Flask,
+    abort,
     flash,
     render_template,
-    session,
     redirect,
     request,
-    g,
+    session,
     url_for,
 )
 from flask.ext.bootstrap import Bootstrap
@@ -67,12 +66,12 @@ dbsession = SluiceSession()
 
 @app.context_processor
 def _inject_default_args():
-    return {
-        'active_nav': '',
-        'APP_NAME': fs.APP_NAME,
-        'page_title': str(request.url_rule),
-        'user': session.get('user', None)
-    }
+    return dict(
+        active_nav='',
+        APP_NAME=fs.APP_NAME,
+        page_title=str(request.url_rule),
+        user=session.get('user', None),
+    )
 
 
 @app.route('/job/<tr_id>', methods=['GET'])
