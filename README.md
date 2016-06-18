@@ -8,6 +8,8 @@ A dashboard and service for displaying metrics and executing commands for the Py
 
 You'll need postgresql, flask, and celery, along with all other python dependencies.
 
+`git clone --recursive https://github.com/christabor-incubator/sluice.git`
+
 Celery
 
 `celery -A app.celery worker`
