@@ -1,0 +1,11 @@
+{% extends "layouts/base.html" %}
+{% from "macros.html" import wtform_form, bs3_list_group %}
+
+{% block body %}
+<h1>View for <strong>#{{ id }}</strong></h1>
+
+{% with run = testrun %}
+    {% include "partials/testrun.html" %}
+{% endwith %}
+
+{% endblock %}

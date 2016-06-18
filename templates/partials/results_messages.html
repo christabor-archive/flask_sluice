@@ -1,0 +1,19 @@
+<div class="row">
+    <div class="col-md-6">
+        <blockquote>{{ msg.message }} | <span class="label label-{{ msg.code|error_label }}">{{ msg.code }}</span></blockquote>
+        <small>Source: {{ msg.source }}</small>
+    </div>
+    <div class="col-md-6">
+        Module: <strong>{{ msg.location.module }}</strong>,
+        {% if msg.location.function %}
+        Function:
+        <code>
+            {{ function }}
+        </code>
+        {% endif %}
+        <p>
+            Line {{ msg.location.line }}, Character {{ msg.location.character }} in
+            <code>{{ msg.location.path }}</code>
+        </p>
+    </div>
+</div>

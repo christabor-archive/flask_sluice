@@ -1,0 +1,45 @@
+{% from "extras_msg.html" import flash_messages %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %} {{ APP_NAME }} {% endblock %}
+    </title>
+    <!-- VENDOR CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/vendor/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/vendor/c3.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/vendor/dataTables.bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/vendor/bootstrap-datetimepicker.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/vendor/font-awesome.min.css') }}">
+    <!-- APP CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dist/app.min.css') }}">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                {% include "partials/nav.html" %}
+                {{ flash_messages() }}
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                {% block body %}{% endblock %}
+            </div>
+        </div>
+    </div>
+    <!-- VENDOR JS -->
+    <script src="{{ url_for('static', filename='js/vendor/jquery-2.1.4.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/vendor/d3.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/vendor/c3.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/vendor/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/vendor/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/vendor/bootstrap-datetimepicker.min.js') }}"></script>
+    <!-- APP JS -->
+    <script src="{{ url_for('static', filename='js/dist/app.min.js') }}"></script>
+</body>
+</html>

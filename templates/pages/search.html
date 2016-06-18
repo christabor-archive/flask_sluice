@@ -1,0 +1,23 @@
+{% extends "layouts/base.html" %}
+{% from "macros.html" import wtform_form, objects2table %}
+{% from "extras_code.html" import inline_code %}
+
+{% block body %}
+
+<h1>Search results <small><em>(found {{ results|length }} matches)</em></small></h1>
+
+{% if results %}
+    {{ objects2table(
+        results,
+        filterkeys=['_sa_instance_state', 'results'],
+        handle_links=True,
+        field_macros={'pathname': inline_code},
+        pk_link='/job')
+    }}
+{% else %}
+    <br>
+    <div class="alert alert-warning">
+        <p>No completed jobs.</p>
+    </div>
+{% endif %}
+{% endblock %}

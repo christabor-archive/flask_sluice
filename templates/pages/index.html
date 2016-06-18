@@ -1,0 +1,46 @@
+{% extends "layouts/base.html" %}
+{% from "macros.html" import wtform_form, objects2table %}
+{% from "extras_code.html" import inline_code %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tabbable">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#new-job" data-toggle="tab">New job</a></li>
+                <li><a href="#jobs" data-toggle="tab">View completed jobs</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="new-job">
+                    <h2>Create new job</h2>
+                    {{ wtform_form(form, action=url_for('index'), method='POST') }}
+                </div>
+                <div class="tab-pane" id="jobs">
+                    {% if results %}
+                    {% for msg in results.messages %}
+                    {% include "partials/results_messages.html" %}
+                    {% endfor %}
+                    {% endif %}
+
+                    {% if existing %}
+                        <h2>Completed jobs</h2>
+                        {{ objects2table(
+                            existing,
+                            filterkeys=['_sa_instance_state', 'results'],
+                            handle_links=True,
+                            field_macros={'pathname': inline_code},
+                            pk_link='/job')
+                        }}
+                    {% else %}
+                        <br>
+                        <div class="alert alert-warning">
+                            <p>No completed jobs.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

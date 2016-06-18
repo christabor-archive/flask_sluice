@@ -1,0 +1,3 @@
+[submodule "flask_extras"]
+	path = flask_extras
+	url = https://github.com/christabor/flask_extras.git

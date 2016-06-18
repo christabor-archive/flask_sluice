@@ -1,0 +1,19 @@
+<div class="panel panel-{{ run.strictness|get_strictness_label }}">
+    <div class="panel-heading">
+        <h3 class="panel-title">&ldquo;{{ run.pathname }}&rdquo; @ {{ run.strictness }} <span class="pull-right">(#{{ run.id }})</span></h3>
+    </div>
+    <div class="panel-body">
+        {% if run.output == 'json' %}
+            {% for msg in run.results.messages %}
+                    {% include "partials/results_messages.html" %}
+                <hr>
+            {% endfor %}
+        {% else %}
+            <code>
+                <pre>
+                    {{ run.results }}
+                </pre>
+            </code>
+        {% endif %}
+    </div>
+</div>
