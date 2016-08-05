@@ -16,4 +16,5 @@ Celery
 
 Postgresql
 
+e.g. in mac:
 `postgres -D /usr/local/postgresql/data/`
