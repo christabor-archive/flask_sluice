@@ -2,7 +2,7 @@
 
 ![sluice logo](sluice_logo.png)
 
-A dashboard and service for displaying metrics and executing commands for the Python prospector analysis module.
+A dashboard and service for displaying results and executing linting reports for the Python prospector analysis module.
 
 ## Getting started.
 
