@@ -10,11 +10,22 @@ You'll need postgresql, flask, and celery, along with all other python dependenc
 
 `git clone --recursive https://github.com/christabor-incubator/sluice.git`
 
-Celery
+```shell
+virtualenv env
+source env/bin/activate
+pip install -r frozen.txt
+cd src
+python app.py
+```
+
+#### Celery+Redis
+
+`redis-server`
 
 `celery -A app.celery worker`
 
-Postgresql
+#### Postgresql
 
-e.g. in mac:
+e.g. in OSX:
+
 `postgres -D /usr/local/postgresql/data/`

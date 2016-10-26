@@ -35,6 +35,7 @@ pylint-flask==0.5
 pylint-plugin-utils==0.2.4
 pytz==2016.7
 PyYAML==3.12
+redis==2.10.5
 requirements-detector==0.5.2
 setoptconf==0.2.0
 six==1.10.0

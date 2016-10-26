@@ -19,10 +19,8 @@ from flask import (
 )
 from flask.ext.bootstrap import Bootstrap
 from flask.ext import breadcrumbs
-from flask_extras.filters import config as filter_conf
+from flask_extras import FlaskExtras
 from flask_wtf.csrf import CsrfProtect
-
-import jinja2
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -51,13 +49,9 @@ breadcrumbs.Breadcrumbs(app=app)
 # Setup CSRF protection
 CsrfProtect().init_app(app)
 bootstrap = Bootstrap(app)
-filter_conf.config_flask_filters(app)
 
-folders = jinja2.ChoiceLoader([
-    app.jinja_loader,
-    jinja2.FileSystemLoader('{0}/flask_extras/macros/'.format(currdir)),
-])
-app.jinja_loader = folders
+# Setup extra filters/macros
+FlaskExtras(app)
 
 db = create_engine(fs.DB_URI)
 SluiceSession = sessionmaker(bind=db)
