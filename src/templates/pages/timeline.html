@@ -2,10 +2,21 @@
 {% from "macros.html" import wtform_form %}
 
 {% block body %}
-<h1>Timeline View for <strong>#{{ id }}</strong></h1>
-
-{% for run in runs %}
-    {% include "partials/testrun.html" %}
-{% endfor %}
-
+{% if runs %}
+    <h1>Timeline View for <small><strong><a href="{{ url }}" target="_blank">{{ url }}</a></strong></small></h1>
+    {% for run in runs|reverse %}
+        Run @ {{ run.results.summary.completed }}
+        strictness @
+        <span class="label label-default">{{ run.strictness }}</span> found <strong>{{run.results.messages|length }}</strong> issues.
+        <hr>
+        {# {% include "partials/testrun.html" %} #}
+    {% endfor %}
+{% else %}
+    <h1>Search for a timeline view of runs by github url</h1>
+    <form class="text-center" action="{{ url_for('timeline') }}">
+        <input type="text" class="form-control" name="github_url">
+        <br>
+        <button class="btn btn-info">Search</button>
+    </form>
+{% endif %}
 {% endblock %}

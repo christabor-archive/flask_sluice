@@ -12,6 +12,10 @@ from wtforms.validators import DataRequired
 import models
 
 
+strictness = [('', '')] + models.enum2list(models.Strictness)
+output = [('', '')] + models.enum2list(models.OutputFormat)
+
+
 class ProspectorResultsForm(Form):
     """A form for generating results from the prospector analysis tool."""
 
@@ -19,11 +23,11 @@ class ProspectorResultsForm(Form):
     github_url = TextField(u'Github url', validators=[DataRequired()])
     strictness = SelectField(
         u'Strictness level',
-        choices=models.enum2list(models.Strictness),
+        choices=strictness,
         validators=[DataRequired()])
     output = SelectField(
         u'Output format',
-        choices=models.enum2list(models.OutputFormat),
+        choices=output,
         validators=[DataRequired()],
     )
     path = TextField(u'Filepath (e.g. ./foo/bar.py)',

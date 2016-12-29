@@ -102,13 +102,17 @@ def job(tr_id):
     return render_template('pages/job.html', **kwargs)
 
 
-@app.route('/timeline/<pathname>', methods=['GET'])
+@app.route('/timeline', methods=['GET'])
 @breadcrumbs.register_breadcrumb(app, '.timeline', 'Timeline')
-def timeline(pathname):
+def timeline():
     """View results."""
+    runs = None
+    url = request.args.get('github_url')
+    if url is not None:
+        runs = coll.find(dict(github_url=url))
     kwargs = dict(
-        pathname=pathname,
-        runs=coll.find(dict(pathname=pathname)),
+        url=url,
+        runs=runs,
     )
     return render_template('pages/timeline.html', **kwargs)
 
@@ -163,6 +167,7 @@ def index():
             flash('Added new test entry to queue.')
             return redirect(url_for('index'))
     kwargs = dict(
+        active_nav='home',
         results=task,
         form=form,
         existing=coll.find(),

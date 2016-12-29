@@ -16,6 +16,7 @@
                     {{ wtform_form(
                         form,
                         action=url_for('index'),
+                        input_classes=['form-control'],
                         btn_classes=['btn', 'btn-info', 'btn-md'],
                         reset_btn=False,
                         method='POST')

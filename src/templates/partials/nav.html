@@ -2,8 +2,11 @@
     <div class="container-fluid">
         <a class="navbar-brand" href="#">{{ APP_NAME }}</a>
         <ul class="nav navbar-nav">
-            <li class="active">
+            <li class="{{ 'active' if active_nav == 'home' else '' }}">
                 <a href="{{ url_for('index') }}">Home</a>
+            </li>
+            <li class="{{ 'active' if active_nav == 'timeline' else '' }}">
+                <a href="{{ url_for('timeline') }}">Timeline</a>
             </li>
         </ul>
     </div>

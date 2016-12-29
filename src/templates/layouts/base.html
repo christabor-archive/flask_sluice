@@ -33,8 +33,9 @@
                     {{ wtform_form(
                         searchform,
                         action=url_for('search'),
+                        input_classes=['form-control'],
                         btn_classes=['btn', 'btn-info', 'btn-md'],
-                        reset_btn=False,
+                        reset_btn_classes=['btn', 'btn-warning', 'btn-default'],
                         method='GET')
                     }}
                 </div>
