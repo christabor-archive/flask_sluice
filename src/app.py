@@ -65,10 +65,23 @@ bootstrap = Bootstrap(app)
 FlaskExtras(app)
 
 
+def _get_search_formdefaults():
+    """Return search form pre-populated with existing GET params."""
+    defaults = dict()
+    for arg in ['output', 'strictness', 'name', 'path', 'github_url']:
+        if all([
+            request.args.get(arg) is not None,
+            request.args.get(arg) != '',
+        ]):
+            defaults.update(**{arg: request.args.get(arg).strip()})
+    return forms.SearchForm(**defaults)
+
+
 @app.context_processor
 def _inject_default_args():
     return dict(
         active_nav='',
+        searchform=_get_search_formdefaults(),
         APP_NAME=fs.APP_NAME,
         page_title=str(request.url_rule),
         user=session.get('user', None),
@@ -122,11 +135,14 @@ def lint_code(username, **kwargs):
 @breadcrumbs.register_breadcrumb(app, '.search', 'Search results')
 def search():
     """Search page."""
-    if request.args.get('q') is None:
-        flash('No argument specified.')
-        return redirect(url_for('index'))
-    pathname = request.args.get('q').strip()
-    results = coll.find(dict(pathname=pathname))
+    search_kwargs = dict()
+    for arg in ['output', 'strictness', 'name', 'path', 'github_url']:
+        if all([
+            request.args.get(arg) is not None,
+            request.args.get(arg) != '',
+        ]):
+            search_kwargs.update(**{arg: request.args.get(arg).strip()})
+    results = coll.find(search_kwargs)
     if not results:
         return abort(404)
     kwargs = dict(results=results)

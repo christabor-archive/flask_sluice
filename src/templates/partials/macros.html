@@ -1,0 +1,29 @@
+{% from "macros.html" import wtform_form, objects2table %}
+{% from "extras_code.html" import inline_code %}
+
+{% macro id_link(id) %}
+    <a href="{{ url_for('job', tr_id=id) }}">{{ id }}</a>
+{% endmacro %}
+
+{% macro results_display(results) %}
+    {% if results %}
+        <p class="lead"><strong>{{ results.count() }}</strong> results</p>
+        {% for res in results %}
+            {{ objects2table(
+                [res],
+                filterkeys=['results'],
+                handle_links=True,
+                classes=['table', 'table-striped'],
+                field_macros={
+                    'pathname': inline_code,
+                    '_id': id_link
+                },
+                )
+            }}
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-info">
+            <p>No results</p>
+        </div>
+    {% endif %}
+{% endmacro %}

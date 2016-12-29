@@ -5,6 +5,7 @@ from flask_wtf import Form
 from wtforms import (
     SelectField,
     TextField,
+    HiddenField,
 )
 from wtforms.validators import DataRequired
 
@@ -35,3 +36,9 @@ class ProspectorResultsForm(Form):
             # Python ending files only.
             if not field.data.endswith('.py'):
                 raise ValueError('Only python files are allowed.')
+
+
+class SearchForm(ProspectorResultsForm):
+    """Searching."""
+
+    action = HiddenField(default='search')

@@ -1,25 +1,8 @@
 {% extends "layouts/base.html" %}
-{% from "macros.html" import wtform_form, objects2table %}
-{% from "extras_code.html" import inline_code %}
+{% from "partials/macros.html" import results_display %}
 
 {% block body %}
 
-<h1>Search results <small><em>(found {{ results|list|length }} matches)</em></small></h1>
-
-{% if results %}
-    {% for result in results %}
-        {{ objects2table(
-            [results],
-            filterkeys=['_sa_instance_state', 'results'],
-            handle_links=True,
-            field_macros={'pathname': inline_code},
-            pk_link='/job')
-        }}
-    {% endfor %}
-{% else %}
-    <br>
-    <div class="alert alert-warning">
-        <p>No completed jobs.</p>
-    </div>
-{% endif %}
+<h1>Search results</h1>
+{{ results_display(results) }}
 {% endblock %}

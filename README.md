@@ -6,7 +6,7 @@ A dashboard and service for displaying results and executing linting reports for
 
 ## Getting started.
 
-You'll need postgresql, flask, and celery, along with all other python dependencies.
+You'll need mongo, flask, and celery, along with all other python dependencies.
 
 `git clone --recursive https://github.com/christabor-incubator/sluice.git`
 
@@ -24,8 +24,8 @@ python app.py
 
 `celery -A app.celery worker`
 
-#### Postgresql
+#### Mongo
 
 e.g. in OSX:
 
-`postgres -D /usr/local/postgresql/data/`
+`mongod`

@@ -1,13 +1,8 @@
 {% extends "layouts/base.html" %}
-{% from "macros.html" import wtform_form, objects2table %}
-{% from "extras_code.html" import inline_code %}
+{% from "macros.html" import wtform_form %}
+{% from "partials/macros.html" import results_display %}
 
 {% block body %}
-
-{% macro id_link(id) %}
-    <a href="{{ url_for('job', tr_id=id) }}">{{ id }}</a>
-{% endmacro %}
-
 <div class="row">
     <div class="col-md-12">
         <div class="tabbable">
@@ -35,19 +30,7 @@
 
                     {% if existing %}
                         <h2>Completed jobs</h2>
-                        {% for obj in existing %}
-                            {{ objects2table(
-                                [obj],
-                                filterkeys=['_sa_instance_state', 'results'],
-                                handle_links=True,
-                                classes=['table', 'table-striped'],
-                                field_macros={
-                                    'pathname': inline_code,
-                                    '_id': id_link
-                                },
-                                )
-                            }}
-                        {% endfor %}
+                        {{ results_display(existing) }}
                     {% else %}
                         <br>
                         <div class="alert alert-warning">
