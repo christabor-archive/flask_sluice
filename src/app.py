@@ -22,14 +22,25 @@ from flask.ext import breadcrumbs
 from flask_extras import FlaskExtras
 from flask_wtf.csrf import CsrfProtect
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from bson.objectid import ObjectId
+from pymongo import MongoClient
 
 import forms
+
 import filters
-import models
 import prospector_api as api
 import settings as fs
+
+
+DB_URI = os.environ.get('SLUICE_DB_HOST', 'localhost')
+DB_PORT = int(os.environ.get('SLUICE_DB_PORT', 27017))
+DB_NAME = os.environ.get('SLUICE_DB', 'sluice')
+DB_COLL = os.environ.get('SLUICE_DB_COLL', 'jobs')
+
+client = MongoClient(host=DB_URI, port=DB_PORT)
+conn = client[DB_NAME]
+coll = conn[DB_COLL]
+
 
 currdir = os.getcwd()
 app = Flask(__name__)
@@ -53,10 +64,6 @@ bootstrap = Bootstrap(app)
 # Setup extra filters/macros
 FlaskExtras(app)
 
-db = create_engine(fs.DB_URI)
-SluiceSession = sessionmaker(bind=db)
-dbsession = SluiceSession()
-
 
 @app.context_processor
 def _inject_default_args():
@@ -72,7 +79,7 @@ def _inject_default_args():
 @breadcrumbs.register_breadcrumb(app, '.job', 'Job')
 def job(tr_id):
     """Job results."""
-    testrun = dbsession.query(models.TestRun).filter_by(id=tr_id).first()
+    testrun = coll.find_one(dict(_id=ObjectId(tr_id)))
     if not testrun:
         abort(404)
     kwargs = dict(
@@ -88,37 +95,38 @@ def timeline(pathname):
     """View results."""
     kwargs = dict(
         pathname=pathname,
-        runs=dbsession.query(
-            models.TestRun).filter_by(pathname=pathname).all()
+        runs=coll.find(dict(pathname=pathname)),
     )
     return render_template('pages/timeline.html', **kwargs)
 
 
 @celery.task
-def _check_code(pathname, username, **kwargs):
+def lint_code(username, **kwargs):
     """Layer of indirection around db, celery task and prospector API."""
+    pathname = kwargs.pop('path')
+    name = kwargs.pop('name')
+    github_url = kwargs.pop('github_url')
+
     results = api.get_results(pathname, **kwargs)
     kwargs.update(dict(
+        name=name,
+        github_url=github_url,
         pathname=pathname,
         created_by=username,
         results=results,
     ))
-    dbsession.add(models.TestRun(**kwargs))
-    dbsession.commit()
+    coll.insert_one(kwargs)
 
 
 @app.route('/search', methods=['GET'])
 @breadcrumbs.register_breadcrumb(app, '.search', 'Search results')
 def search():
     """Search page."""
-    if request.args.get('q', None) is None:
+    if request.args.get('q') is None:
         flash('No argument specified.')
         return redirect(url_for('index'))
     pathname = request.args.get('q').strip()
-    results = (dbsession
-               .query(models.TestRun)
-               .filter_by(pathname=pathname)
-               .all())
+    results = coll.find(dict(pathname=pathname))
     if not results:
         return abort(404)
     kwargs = dict(results=results)
@@ -133,23 +141,20 @@ def index():
     task = None
     if request.method == 'POST':
         if form.validate_on_submit():
-            pathname = form['path'].data
-            data = dict(
-                strictness=form['strictness'].data,
-                output=form['output'].data,)
+            data = form.data
             user = session.get('user', 'Anonymous')
-            task = _check_code.delay(pathname, user, **data)
+            task = lint_code.delay(user, **data)
             flash('Added new test entry to queue.')
-            redirect(url_for('index'))
+            return redirect(url_for('index'))
     kwargs = dict(
         results=task,
         form=form,
-        existing=dbsession.query(models.TestRun).all()
+        existing=coll.find(),
     )
     return render_template('pages/index.html', **kwargs)
 
 
 if __name__ == "__main__":
     # TOOD: move to one-time script, like alembic.
-    models.create_schemas(db)
+    # models.create_schemas(db)
     app.run(**fs.FLASK_RUN_SETTINGS)

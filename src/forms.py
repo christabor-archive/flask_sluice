@@ -14,6 +14,8 @@ import models
 class ProspectorResultsForm(Form):
     """A form for generating results from the prospector analysis tool."""
 
+    name = TextField(u'Project name', validators=[DataRequired()])
+    github_url = TextField(u'Github url', validators=[DataRequired()])
     strictness = SelectField(
         u'Strictness level',
         choices=models.enum2list(models.Strictness),

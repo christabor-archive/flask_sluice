@@ -4,6 +4,10 @@
 
 {% block body %}
 
+{% macro id_link(id) %}
+    <a href="{{ url_for('job', tr_id=id) }}">{{ id }}</a>
+{% endmacro %}
+
 <div class="row">
     <div class="col-md-12">
         <div class="tabbable">
@@ -14,7 +18,13 @@
             <div class="tab-content">
                 <div class="tab-pane active" id="new-job">
                     <h2>Create new job</h2>
-                    {{ wtform_form(form, action=url_for('index'), method='POST') }}
+                    {{ wtform_form(
+                        form,
+                        action=url_for('index'),
+                        btn_classes=['btn', 'btn-info', 'btn-md'],
+                        reset_btn=False,
+                        method='POST')
+                    }}
                 </div>
                 <div class="tab-pane" id="jobs">
                     {% if results %}
@@ -25,13 +35,19 @@
 
                     {% if existing %}
                         <h2>Completed jobs</h2>
-                        {{ objects2table(
-                            existing,
-                            filterkeys=['_sa_instance_state', 'results'],
-                            handle_links=True,
-                            field_macros={'pathname': inline_code},
-                            pk_link='/job')
-                        }}
+                        {% for obj in existing %}
+                            {{ objects2table(
+                                [obj],
+                                filterkeys=['_sa_instance_state', 'results'],
+                                handle_links=True,
+                                classes=['table', 'table-striped'],
+                                field_macros={
+                                    'pathname': inline_code,
+                                    '_id': id_link
+                                },
+                                )
+                            }}
+                        {% endfor %}
                     {% else %}
                         <br>
                         <div class="alert alert-warning">

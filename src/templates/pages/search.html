@@ -4,16 +4,18 @@
 
 {% block body %}
 
-<h1>Search results <small><em>(found {{ results|length }} matches)</em></small></h1>
+<h1>Search results <small><em>(found {{ results|list|length }} matches)</em></small></h1>
 
 {% if results %}
-    {{ objects2table(
-        results,
-        filterkeys=['_sa_instance_state', 'results'],
-        handle_links=True,
-        field_macros={'pathname': inline_code},
-        pk_link='/job')
-    }}
+    {% for result in results %}
+        {{ objects2table(
+            [results],
+            filterkeys=['_sa_instance_state', 'results'],
+            handle_links=True,
+            field_macros={'pathname': inline_code},
+            pk_link='/job')
+        }}
+    {% endfor %}
 {% else %}
     <br>
     <div class="alert alert-warning">
